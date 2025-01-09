@@ -98,7 +98,7 @@ mutation {
 
   ${ItemKeys.map((itemKey) => {
     if (itemKey === "tai_san_co_cam_ket_mua_lai") {
-      return `${itemKey}: ${updatedItem[itemKey] ? "true" : "false"}`;
+      return `${itemKey}: ${updatedItem[itemKey] ? true : false}`;
     }
     return `${itemKey}: "${updatedItem[itemKey]}"`;
   })}
@@ -122,6 +122,8 @@ mutation {
       });
       const result = await response.json();
       alert(`Cập nhật thành công`);
+      setEditingItem(null);
+      setIsEditModalOpen(false);
       setTriggerRefetch(true);
     } catch (error) {
       alert(`Có lỗi xảy ra: ${String(error)}`);
@@ -154,9 +156,10 @@ mutation {
         headers: headers,
         body: JSON.stringify({ query }),
       });
-      const result = await response.json();
       alert(`Xóa thành công`);
-      setTriggerRefetch(true);
+
+      // setTriggerRefetch(true);
+      setTableData((old) => old.filter((item) => item.key_tai_san !== keyTaiSan));
     } catch (error) {
       alert(`Có lỗi xảy ra: ${String(error)}`);
       console.error("Error :", error);
@@ -173,7 +176,7 @@ mutation {
   createdm_tai_san( item:{
     ${ItemKeys.map((itemKey) => {
       if (itemKey === "tai_san_co_cam_ket_mua_lai") {
-        return `${itemKey}: ${item[itemKey] ? 1 : 0}`;
+        return `${itemKey}: ${item[itemKey] ? true : false}`;
       }
       return `${itemKey}: "${item[itemKey]}"`;
     })}
@@ -196,6 +199,7 @@ mutation {
       });
       const result = await response.json();
       alert(`Thêm mới thành công`);
+      setAddModalOpen(false);
       setTriggerRefetch(true);
     } catch (error) {
       alert(`Có lỗi xảy ra: ${String(error)}`);

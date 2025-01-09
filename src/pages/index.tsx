@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import TableManagement from "@/feature/table";
 import { InteractiveBrowserCredential } from "@azure/identity";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 // Token Acquisition - Development Only
 async function acquireToken() {
@@ -10,7 +11,10 @@ async function acquireToken() {
       clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
     });
     const tokenResponse = await credential.getToken(
-      "https://analysis.windows.net/powerbi/api/user_impersonation"
+      "https://analysis.windows.net/powerbi/api/user_impersonation",
+      {
+        requestOptions: {},
+      }
     );
     return tokenResponse?.token; // Safely return the token
   } catch (error) {
@@ -24,15 +28,27 @@ const testToken = null;
 export default function Home() {
   const [token, setToken] = useState<string | null>(testToken);
 
+  const {
+    query: { _token },
+  } = useRouter();
+
   const handleLogin = async () => {
     const _token = await acquireToken();
     setToken(_token);
   };
 
+  useEffect(() => {
+    if (typeof _token === "string") {
+      setToken(_token);
+    }
+
+    return () => {};
+  }, [_token]);
+
   return (
     <div className='min-h-dvh w-full overflow-hidden bg-white p-6'>
       {!token ? (
-        <div className='flex items-center h-full justify-center bg-white'>
+        <div className='flex items-center h-dvh justify-center bg-white'>
           <Button onClick={handleLogin}>Get Token</Button>
         </div>
       ) : (

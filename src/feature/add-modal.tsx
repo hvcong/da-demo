@@ -66,7 +66,6 @@ export function AddModal({ isOpen, onClose, onAdd }: AddModalProps) {
                   <Input
                     id={itemKey}
                     value={state[itemKey]}
-                    disabled={itemKey === "key_tai_san"}
                     onChange={(e) =>
                       setState((old) => ({
                         ...old,
