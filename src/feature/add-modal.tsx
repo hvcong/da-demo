@@ -42,7 +42,7 @@ export function AddModal({ isOpen, onClose, onAdd }: AddModalProps) {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className='bg-white w-[700px] max-w-none'>
         <DialogHeader>
-          <DialogTitle>Add New</DialogTitle>
+          <DialogTitle>Thêm mới</DialogTitle>
         </DialogHeader>
         <div className='gap-4 py-4 grid  grid-cols-2'>
           {ItemKeys.map((itemKey) => {
@@ -85,9 +85,9 @@ export function AddModal({ isOpen, onClose, onAdd }: AddModalProps) {
         </div>
         <DialogFooter>
           <Button onClick={onClose} variant='outline'>
-            Cancel
+            Hủy
           </Button>
-          <Button onClick={() => onAdd(state)}>Add</Button>
+          <Button onClick={() => onAdd(state)}>Thêm</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -28,14 +28,13 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
 
   useEffect(() => {
     setState(initialData);
-    return () => {};
-  }, [open]);
+  }, [open, initialData]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className='bg-white  w-[700px] max-w-none'>
         <DialogHeader>
-          <DialogTitle className=''>Edit</DialogTitle>
+          <DialogTitle className=''>Chỉnh sửa</DialogTitle>
         </DialogHeader>
         <div className='gap-4 py-4 grid  grid-cols-2 '>
           {ItemKeys.map((itemKey) => {
@@ -76,9 +75,9 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
         </div>
         <DialogFooter>
           <Button onClick={onClose} variant='outline'>
-            Cancel
+            Hủy
           </Button>
-          <Button onClick={handleSave}>Save</Button>
+          <Button onClick={handleSave}>Lưu</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
