@@ -1,114 +1,43 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Button } from "@/components/ui/button";
+import TableManagement from "@/feature/table";
+import { InteractiveBrowserCredential } from "@azure/identity";
+import { useState } from "react";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// Token Acquisition - Development Only
+async function acquireToken() {
+  try {
+    const credential = new InteractiveBrowserCredential({
+      clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46",
+    });
+    const tokenResponse = await credential.getToken(
+      "https://analysis.windows.net/powerbi/api/user_impersonation"
+    );
+    return tokenResponse?.token; // Safely return the token
+  } catch (error) {
+    console.error("Error acquiring token:", error);
+    return null;
+  }
+}
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
+const testToken = null;
+// "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InoxcnNZSEhKOS04bWdndDRIc1p1OEJLa0JQdyIsImtpZCI6InoxcnNZSEhKOS04bWdndDRIc1p1OEJLa0JQdyJ9.eyJhdWQiOiJodHRwczovL2FuYWx5c2lzLndpbmRvd3MubmV0L3Bvd2VyYmkvYXBpIiwiaXNzIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvZDdjOTQ2NzMtZjBhZC00MTBkLWI2YjUtNzg3YTI5YThjYjNmLyIsImlhdCI6MTczNjMyODg4OSwibmJmIjoxNzM2MzI4ODg5LCJleHAiOjE3MzYzMzQyNjQsImFjY3QiOjAsImFjciI6IjEiLCJhaW8iOiJBVFFBeS84WUFBQUFxSjFpczlLM2YyTmZld2tUSmN6U2dNaGRiZ1N4d0pLVUprVXJKaThyaGcwY0E0MXdIYlFFVmwwWjhoSzR2T3BxIiwiYW1yIjpbInB3ZCJdLCJhcHBpZCI6IjA0YjA3Nzk1LThkZGItNDYxYS1iYmVlLTAyZjllMWJmN2I0NiIsImFwcGlkYWNyIjoiMCIsImdpdmVuX25hbWUiOiJGYWJyaWNBZG1pbiIsImlkdHlwIjoidXNlciIsImlwYWRkciI6IjE3MS4yNDcuMTY1LjIxMyIsIm5hbWUiOiJGYWJyaWNBZG1pbiIsIm9pZCI6ImEzOTM1YzNhLTAxODQtNDY3Yy05NTAwLTRiYTc1MTMyZWJjNyIsIm9ucHJlbV9zaWQiOiJTLTEtNS0yMS0xNzI0MzI1Nzg4LTI3NTkxMzAyNjItMTMzNzU4OTU3LTIxMDU5IiwicHVpZCI6IjEwMDMyMDA0MDM0NjRCMEMiLCJyaCI6IjEuQVNzQWMwYkoxNjN3RFVHMnRYaDZLYWpMUHdrQUFBQUFBQUFBd0FBQUFBQUFBQURvQU9RckFBLiIsInNjcCI6InVzZXJfaW1wZXJzb25hdGlvbiIsInN1YiI6IjNCcEhuVVJKYnY0QVRrWEZDeU9kM1NNdjBNeGozMHJjekkxWTVsVkprU1EiLCJ0aWQiOiJkN2M5NDY3My1mMGFkLTQxMGQtYjZiNS03ODdhMjlhOGNiM2YiLCJ1bmlxdWVfbmFtZSI6IkZhYnJpY0FkbWluQHB2aS5jb20udm4iLCJ1cG4iOiJGYWJyaWNBZG1pbkBwdmkuY29tLnZuIiwidXRpIjoiR05QT19RYVRnVUtQVFhYMFdmOUxBQSIsInZlciI6IjEuMCIsIndpZHMiOlsiYjc5ZmJmNGQtM2VmOS00Njg5LTgxNDMtNzZiMTk0ZTg1NTA5Il0sInhtc19pZHJlbCI6IjEgMjIifQ.b3NBm07i8j7ZjbvcRtjQiwTDvEHX8Sfknu4_LHTNoNi73atvxE4UwXxgJyjxKusMcbK84zH4ZeRAhPzz5IZcBk1M3z8Q2kkTVNt4dA1gQGy6oqjEAGsoHDkprVT5GkYeuZULSHLOcDeNhV73nfCUUKA-Vprirbr_k66Eoq4DzolMkHSSSNmHN4Skdy3P0iUIABMX-Fx25f_t6s0sF5zyALL0A94Vh6SdWq40R4ifFfS4jraHYWvWEWRiAj63xr5DXK4jdsmv2LLaY29FyNEZtvmzy2eZBQ19_SJlYNGyoHTyDwo9j7yiFr1N6dttYrCSWbflBK-nBQzEul0Jo3oNbg";
 export default function Home() {
-  return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [token, setToken] = useState<string | null>(testToken);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleLogin = async () => {
+    const _token = await acquireToken();
+    setToken(_token);
+  };
+
+  return (
+    <div className='min-h-dvh w-full overflow-hidden bg-white p-6'>
+      {!token ? (
+        <div className='flex items-center h-full justify-center bg-white'>
+          <Button onClick={handleLogin}>Get Token</Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      ) : (
+        <TableManagement token={token} />
+      )}
     </div>
   );
 }
