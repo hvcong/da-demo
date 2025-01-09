@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -12,10 +11,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { EditModal } from "./edit-modal";
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { AddModal } from "./add-modal";
+import { EditModal } from "./edit-modal";
 
 export const ItemKeys = [
   "key_tai_san",
@@ -100,7 +99,7 @@ mutation {
     if (itemKey === "tai_san_co_cam_ket_mua_lai") {
       return `${itemKey}: ${updatedItem[itemKey] ? true : false}`;
     }
-    return `${itemKey}: "${updatedItem[itemKey]}"`;
+    return `${itemKey}: "${(updatedItem as any)[itemKey]}"`;
   })}
   ) {
     result
@@ -178,7 +177,7 @@ mutation {
       if (itemKey === "tai_san_co_cam_ket_mua_lai") {
         return `${itemKey}: ${item[itemKey] ? true : false}`;
       }
-      return `${itemKey}: "${item[itemKey]}"`;
+      return `${itemKey}: "${(item as any)[itemKey]}"`;
     })}
   }) {
     result
@@ -240,7 +239,7 @@ mutation {
               {Object.keys(row).map((key: any) => {
                 return (
                   <TableCell className='' key={key}>
-                    {String(row[key as any])}
+                    {String((row as any)[key])}
                   </TableCell>
                 );
               })}

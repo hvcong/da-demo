@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,16 +57,19 @@ export function AddModal({ isOpen, onClose, onAdd }: AddModalProps) {
                     id={itemKey}
                     checked={state[itemKey]}
                     onCheckedChange={(checked) =>
-                      setState((old) => ({
-                        ...old,
-                        [itemKey]: checked,
-                      }))
+                      setState(
+                        (old) =>
+                          ({
+                            ...old,
+                            [itemKey]: checked,
+                          } as any)
+                      )
                     }
                   />
                 ) : (
                   <Input
                     id={itemKey}
-                    value={state[itemKey]}
+                    value={(state as any)[itemKey]}
                     onChange={(e) =>
                       setState((old) => ({
                         ...old,

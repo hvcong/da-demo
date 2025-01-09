@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -49,7 +50,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                     id={itemKey}
                     checked={state[itemKey]}
                     onCheckedChange={(checked) =>
-                      setState((old) => ({
+                      setState((old: any) => ({
                         ...old,
                         [itemKey]: checked,
                       }))
@@ -58,7 +59,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData }: EditModalPro
                 ) : (
                   <Input
                     id={itemKey}
-                    value={state[itemKey]}
+                    value={(state as any)[itemKey]}
                     disabled={itemKey === "key_tai_san"}
                     onChange={(e) =>
                       setState((old) => ({
