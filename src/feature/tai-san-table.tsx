@@ -35,13 +35,11 @@ import { cn } from "@/lib/utils";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+const initData: TaiSanItem[] = [];
 export const endpoint =
   "https://api.fabric.microsoft.com/v1/workspaces/836c7159-00d0-4a0c-af5e-c76cd38c1444/graphqlapis/7a4a7e49-7c6d-401e-9fd4-817a3b483efc/graphql";
-
-const initData: TaiSanItem[] = [];
-
 type TaiSanItem = {
-  key_tai_san: string;
+  ma_tai_san: string;
   ten_tai_san: string;
   nhom_tai_san: string;
   loai_tai_san_lv1: string;
@@ -54,7 +52,7 @@ type TaiSanItem = {
 };
 
 const itemKeys: (keyof TaiSanItem)[] = [
-  "key_tai_san",
+  "ma_tai_san",
   "ten_tai_san",
   "nhom_tai_san",
   "loai_tai_san_lv1",
@@ -67,7 +65,7 @@ const itemKeys: (keyof TaiSanItem)[] = [
 ];
 
 const itemKeysAdd: (keyof TaiSanItem)[] = [
-  "key_tai_san",
+  "ma_tai_san",
   "ten_tai_san",
   "nhom_tai_san",
   "loai_tai_san_lv1",
@@ -77,7 +75,7 @@ const itemKeysAdd: (keyof TaiSanItem)[] = [
 ];
 
 const itemKeysUpdate: (keyof TaiSanItem)[] = [
-  "key_tai_san",
+  "ma_tai_san",
   "ten_tai_san",
   "nhom_tai_san",
   "loai_tai_san_lv1",
@@ -200,7 +198,7 @@ export function TaiSanTable({ token }: { token: string }) {
         # DELETE
         
         mutation{
-          executedeletedm_tai_san(key_tai_san: "${maCty}"
+          executedeletedm_tai_san(ma_tai_san: "${maCty}"
           )  {
            result   
           }
@@ -232,7 +230,7 @@ export function TaiSanTable({ token }: { token: string }) {
       } else {
         alert("Xóa thành công");
         setDeleteModalOpen(false);
-        setTableData((old) => old.filter((item) => item.key_tai_san !== maCty));
+        setTableData((old) => old.filter((item) => item.ma_tai_san !== maCty));
       }
     } catch (error) {
       setIsDeleting(false);
@@ -373,7 +371,7 @@ export function TaiSanTable({ token }: { token: string }) {
                               <Button
                                 variant={"destructive"}
                                 disabled={isDeleting}
-                                onClick={() => handleDeleteItem(item.key_tai_san)}
+                                onClick={() => handleDeleteItem(item.ma_tai_san)}
                               >
                                 {isDeleting ? "Đang xóa..." : "Xóa"}
                               </Button>
@@ -414,7 +412,7 @@ interface AddModalProps {
 }
 
 const init: TaiSanItem = {
-  key_tai_san: "",
+  ma_tai_san: "",
   ten_tai_san: "",
   nhom_tai_san: "",
   loai_tai_san_lv1: "",
@@ -548,7 +546,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData, isUpdating }: 
                   <Input
                     id={itemKey}
                     value={(state as any)[itemKey]}
-                    disabled={itemKey === "key_tai_san"}
+                    disabled={itemKey === "ma_tai_san"}
                     onChange={(e) =>
                       setState((old) => ({
                         ...old,

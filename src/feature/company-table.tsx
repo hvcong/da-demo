@@ -34,8 +34,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-export const endpoint =
-  "https://api.fabric.microsoft.com/v1/workspaces/836c7159-00d0-4a0c-af5e-c76cd38c1444/graphqlapis/7a4a7e49-7c6d-401e-9fd4-817a3b483efc/graphql";
+import { endpoint } from "./tai-san-table";
 
 const initData: CtyItem[] = [];
 

@@ -26,10 +26,7 @@ import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AddModal } from "./add-modal";
 import { EditModal } from "./edit-modal";
-
-const endpoint =
-  "https://api.fabric.microsoft.com/v1/workspaces/836c7159-00d0-4a0c-af5e-c76cd38c1444/graphqlapis/7a4a7e49-7c6d-401e-9fd4-817a3b483efc/graphql";
-
+import { endpoint } from "./tai-san-table";
 export const ItemKeys = [
   "key_tai_san",
   "ten_tai_san",
