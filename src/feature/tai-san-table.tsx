@@ -37,7 +37,7 @@ import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 const initData: TaiSanItem[] = [];
 export const endpoint =
-  "https://api.fabric.microsoft.com/v1/workspaces/836c7159-00d0-4a0c-af5e-c76cd38c1444/graphqlapis/7a4a7e49-7c6d-401e-9fd4-817a3b483efc/graphql";
+  "https://api.fabric.microsoft.com/v1/workspaces/836c7159-00d0-4a0c-af5e-c76cd38c1444/graphqlapis/31cc3dac-c61e-4ea1-a065-893e3f1ae2c1/graphql";
 type TaiSanItem = {
   ma_tai_san: string;
   ten_tai_san: string;
@@ -109,6 +109,7 @@ export function TaiSanTable({ token }: { token: string }) {
 
   const fetchData = async () => {
     setIsLoading(true);
+    setTriggerRefetch(false);
 
     const query = `
         query {
@@ -123,6 +124,7 @@ export function TaiSanTable({ token }: { token: string }) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     };
+    console.log(query);
 
     try {
       const response = await fetch(endpoint, {
@@ -131,7 +133,7 @@ export function TaiSanTable({ token }: { token: string }) {
         body: JSON.stringify({ query }),
       });
       const result = await response.json();
-      setTableData(result?.data?.dm_cong_ties?.items || []);
+      setTableData(result?.data?.dm_tai_sans?.items || []);
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -163,6 +165,7 @@ export function TaiSanTable({ token }: { token: string }) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     };
+    console.log(query);
     setIsUpdating(true);
 
     try {
@@ -178,12 +181,12 @@ export function TaiSanTable({ token }: { token: string }) {
         alert(
           `Có lỗi xảy ra: ${(result?.errors || [])
             .map((error: any) => error?.message)
-            .join(", ")}. Status=${response?.status}`
+            .join(", ")}. ${response?.status !== 200 && `Status: ${response.status}`}`
         );
       } else {
+        setTriggerRefetch(true);
         alert(`Cập nhật thành công`);
         setEditingItem(null);
-        setTriggerRefetch(true);
       }
     } catch (error) {
       setIsUpdating(false);
@@ -209,6 +212,7 @@ export function TaiSanTable({ token }: { token: string }) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     };
+    console.log(query);
 
     try {
       const response = await fetch(endpoint, {
@@ -224,13 +228,13 @@ export function TaiSanTable({ token }: { token: string }) {
         alert(
           `Có lỗi xảy ra: ${(result?.errors || [])
             .map((error: any) => error?.message)
-            .join(", ")}. Status=${response?.status}`
+            .join(", ")}. ${response?.status !== 200 && `Status: ${response.status}`}`
         );
         setDeleteModalOpen(false);
       } else {
+        setTriggerRefetch(true);
         alert("Xóa thành công");
         setDeleteModalOpen(false);
-        setTableData((old) => old.filter((item) => item.ma_tai_san !== maCty));
       }
     } catch (error) {
       setIsDeleting(false);
@@ -263,6 +267,7 @@ export function TaiSanTable({ token }: { token: string }) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     };
+    console.log(query);
 
     setIsAdding(true);
     try {
@@ -277,12 +282,12 @@ export function TaiSanTable({ token }: { token: string }) {
         alert(
           `Có lỗi xảy ra: ${(result?.errors || [])
             .map((error: any) => error?.message)
-            .join(", ")}. Status=${response?.status}`
+            .join(", ")}. ${response?.status !== 200 && `Status: ${response.status}`}`
         );
       } else {
+        setTriggerRefetch(true);
         alert(`Thêm mới thành công`);
         setAddModalOpen(false);
-        setTriggerRefetch(true);
       }
     } catch (error) {
       setIsAdding(false);

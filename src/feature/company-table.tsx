@@ -45,12 +45,36 @@ type CtyItem = {
   ma_pias: string;
   ten_cong_ty: string;
   ten_cong_ty_ngan: string;
+
+  ngay_tao: string;
+  ngay_cap_nhat: string;
+  bi_xoa: boolean;
 };
 
 const itemKeys: (keyof CtyItem)[] = [
   "id",
-  "ma_bravo",
   "ma_cong_ty",
+  "ma_bravo",
+  "ma_pias",
+  "ten_cong_ty",
+  "ten_cong_ty_ngan",
+
+  "ngay_tao",
+  "ngay_cap_nhat",
+  "bi_xoa",
+];
+
+const itemKeysUpdate: (keyof CtyItem)[] = [
+  "ma_cong_ty",
+  "ma_bravo",
+  "ma_pias",
+  "ten_cong_ty",
+  "ten_cong_ty_ngan",
+];
+
+const itemKeysAdd: (keyof CtyItem)[] = [
+  "ma_cong_ty",
+  "ma_bravo",
   "ma_pias",
   "ten_cong_ty",
   "ten_cong_ty_ngan",
@@ -81,12 +105,13 @@ export function CtyTable({ token }: { token: string }) {
 
   const fetchData = async () => {
     setIsLoading(true);
+    setTriggerRefetch(false);
 
     const query = `
         query {
           dm_cong_ties {
             items {
-      ${itemKeys.join(" ")}
+         ${itemKeys.join(" ")}
             }
           }
         }
@@ -95,6 +120,8 @@ export function CtyTable({ token }: { token: string }) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     };
+
+    console.log(query);
 
     try {
       const response = await fetch(endpoint, {
@@ -118,7 +145,7 @@ export function CtyTable({ token }: { token: string }) {
   mutation {
     executeupdatedm_cong_ty(
   
-    ${itemKeys.map((itemKey) => {
+    ${itemKeysUpdate.map((itemKey) => {
       return `${itemKey}: "${(updatedItem as any)[itemKey]}"`;
     })}
     ) {
@@ -133,7 +160,7 @@ export function CtyTable({ token }: { token: string }) {
       Authorization: `Bearer ${token}`,
     };
     setIsUpdating(true);
-
+    console.log(query);
     try {
       const response = await fetch(endpoint, {
         method: "POST",
@@ -147,7 +174,7 @@ export function CtyTable({ token }: { token: string }) {
         alert(
           `Có lỗi xảy ra: ${(result?.errors || [])
             .map((error: any) => error?.message)
-            .join(", ")}. Status=${response?.status}`
+            .join(", ")}. ${response?.status !== 200 && `Status: ${response.status}`}`
         );
       } else {
         alert(`Cập nhật thành công`);
@@ -178,6 +205,7 @@ export function CtyTable({ token }: { token: string }) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     };
+    console.log(query);
 
     try {
       const response = await fetch(endpoint, {
@@ -193,13 +221,13 @@ export function CtyTable({ token }: { token: string }) {
         alert(
           `Có lỗi xảy ra: ${(result?.errors || [])
             .map((error: any) => error?.message)
-            .join(", ")}. Status=${response?.status}`
+            .join(", ")}. ${response?.status !== 200 && `Status: ${response.status}`}`
         );
         setDeleteModalOpen(false);
       } else {
         alert("Xóa thành công");
         setDeleteModalOpen(false);
-        setTableData((old) => old.filter((item) => item.ma_cong_ty !== maCty));
+        setTriggerRefetch(true);
       }
     } catch (error) {
       setIsDeleting(false);
@@ -214,11 +242,9 @@ export function CtyTable({ token }: { token: string }) {
   
   mutation {
     createdm_cong_ty( item:{
-      ${itemKeys
-        .filter((_) => _ !== "id")
-        .map((itemKey) => {
-          return `${itemKey}: "${(item as any)[itemKey]}"`;
-        })}
+      ${itemKeysAdd.map((itemKey) => {
+        return `${itemKey}: "${(item as any)[itemKey]}"`;
+      })}
     }) {
       result
     }
@@ -232,6 +258,7 @@ export function CtyTable({ token }: { token: string }) {
       Authorization: `Bearer ${token}`,
     };
 
+    console.log(query);
     setIsAdding(true);
     try {
       const response = await fetch(endpoint, {
@@ -245,7 +272,7 @@ export function CtyTable({ token }: { token: string }) {
         alert(
           `Có lỗi xảy ra: ${(result?.errors || [])
             .map((error: any) => error?.message)
-            .join(", ")}. Status=${response?.status}`
+            .join(", ")}. ${response?.status !== 200 && `Status: ${response.status}`}`
         );
       } else {
         alert(`Thêm mới thành công`);
@@ -386,6 +413,9 @@ const init: CtyItem = {
   ten_cong_ty: "",
   ten_cong_ty_ngan: "",
   ma_pias: "",
+  bi_xoa: false,
+  ngay_cap_nhat: "",
+  ngay_tao: "",
 };
 
 export function AddModal({ isOpen, onClose, onAdd, isAdding }: AddModalProps) {
@@ -404,29 +434,27 @@ export function AddModal({ isOpen, onClose, onAdd, isAdding }: AddModalProps) {
           <DialogTitle>Thêm mới</DialogTitle>
         </DialogHeader>
         <div className='gap-4 py-4 grid  grid-cols-2'>
-          {itemKeys
-            .filter((_) => _ !== "id")
-            .map((itemKey) => {
-              return (
-                <div key={itemKey} className='grid   items-center gap-2'>
-                  <Label className='text-gray-700' htmlFor={itemKey}>
-                    {itemKey}
-                  </Label>
+          {itemKeysAdd.map((itemKey) => {
+            return (
+              <div key={itemKey} className='grid   items-center gap-2'>
+                <Label className='text-gray-700' htmlFor={itemKey}>
+                  {itemKey}
+                </Label>
 
-                  <Input
-                    id={itemKey}
-                    value={(state as any)[itemKey]}
-                    onChange={(e) =>
-                      setState((old) => ({
-                        ...old,
-                        [itemKey]: e.target.value,
-                      }))
-                    }
-                    // placeholder={itemKey}
-                  />
-                </div>
-              );
-            })}
+                <Input
+                  id={itemKey}
+                  value={(state as any)[itemKey]}
+                  onChange={(e) =>
+                    setState((old) => ({
+                      ...old,
+                      [itemKey]: e.target.value,
+                    }))
+                  }
+                  // placeholder={itemKey}
+                />
+              </div>
+            );
+          })}
         </div>
         <DialogFooter>
           <Button onClick={onClose} variant='outline'>
@@ -474,7 +502,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData, isUpdating }: 
           <DialogTitle className=''>Chỉnh sửa</DialogTitle>
         </DialogHeader>
         <div className='gap-4 py-4 grid  grid-cols-2 '>
-          {itemKeys.map((itemKey) => {
+          {itemKeysUpdate.map((itemKey) => {
             return (
               <div key={itemKey} className='grid   items-center gap-2'>
                 <Label className='text-gray-700' htmlFor={itemKey}>
@@ -484,7 +512,7 @@ export function EditModal({ isOpen, onClose, onSave, initialData, isUpdating }: 
                 <Input
                   id={itemKey}
                   value={(state as any)[itemKey]}
-                  disabled={itemKey === "id"}
+                  disabled={itemKey === "ma_cong_ty"}
                   onChange={(e) =>
                     setState((old) => ({
                       ...old,
