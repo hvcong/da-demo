@@ -67,11 +67,11 @@ export function CtyTable({ token }: { token: string }) {
   const [triggerRefetch, setTriggerRefetch] = useState(true);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  // useEffect(() => {
-  //   if (triggerRefetch) {
-  //     fetchData();
-  //   }
-  // }, [triggerRefetch]);
+  useEffect(() => {
+    if (triggerRefetch) {
+      fetchData();
+    }
+  }, [triggerRefetch]);
 
   useEffect(() => {
     return () => {
